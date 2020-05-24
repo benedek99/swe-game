@@ -93,13 +93,76 @@ public class SweGameState implements Cloneable{
      *
      * @return {@code true} if a goal state is reached, {@code false} otherwise
      */
-    public boolean isSolved() {
-        for (Cell[] row : board) {
-            for (Cell cell : row) {
+    public boolean isGoal() {
+        for (int i = 0; i < 5; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                if (board[i][j].getValue()>0){
 
+                if ((i==0 && j==0) || (i==0 && j==3) || (i==4 && j==0) || (i==4 && j==3)) {
+                    continue;
+                }
+                if (i == 0 || i == 4){
+                    if ((board[i][j] == board[i][j+1]) && (board[i][j] == board[i][j-1])){
+                        return true;
+                    }
+                }
+                else if (j == 0 || j == 3){
+                    if ((board[i][j] == board[i+1][j]) && (board[i][j] == board[i-1][j])){
+                        return true;
+                    }
+                }
+                else if (((board[i][j] == board[i+1][j]) && (board[i][j] == board[i-1][j])) ||
+                        ((board[i][j] == board[i][j+1]) && (board[i][j] == board[i][j-1])) ||
+                        ((board[i][j] == board[i-1][j+1]) && (board[i][j] == board[i+1][j-1])) ||
+                        ((board[i][j] == board[i-1][j-1]) && (board[i][j] == board[i+1][j+1])))
+                    return true;
+                }
             }
         }
-        return true;
+        return false;
+    }
+
+    /**
+     * Returns whether a disk at the specified position can be moved to an other specified position.
+     *
+     * @param fromRow the row of the disk to be moved
+     * @param fromCol the column of the disk to be moved
+     * @param toRow the row we move the disk to
+     * @param toCol the column we move the disk to
+     * @return {@code true} if the disk at the specified position can be moved
+     * to an other specified position, {@code false} otherwise
+     */
+
+    public boolean canMoveTo(int fromRow, int fromCol, int toRow, int toCol){
+        if (fromRow<0 || fromRow>4 || toRow<0 || toRow>4 || fromCol<0 || fromCol>3 || toCol<0 || toCol>3){
+            return false;
+        }
+        if (board[fromRow][fromCol].getValue()>0 && board[toRow][toCol].getValue()==0){
+            return (Math.abs(fromRow - toRow) == 1 && Math.abs(fromCol - toCol) == 0) || (Math.abs(fromRow - toRow) == 0 && Math.abs(fromCol - toCol) == 1);
+        }
+        return false;
+    }
+
+    /**
+     * Moves the disk at the specified position to an other specified position.
+     *
+     * @param fromRow the row of the disk to be moved
+     * @param fromCol the column of the disk to be moved
+     * @param toRow the row we move the disk to
+     * @param toCol the column we move the disk to
+     * @throws IllegalArgumentException if the disk at the specified position
+     * can not be moved to the other specified position
+     */
+    public void move(int fromRow, int fromCol, int toRow, int toCol){
+        if (canMoveTo(fromRow,fromCol,toRow,toCol)){
+            //log.info("disk at ({},{}) is rolled to ({},{})", fromRow, fromCol, toRow, toCol);
+            board[toRow][toCol] = Cell.of(board[fromRow][fromCol].getValue());
+            board[fromRow][fromCol] = Cell.of(0);
+        }
+        else {
+            throw new IllegalArgumentException();
+        }
+
     }
 
     public String toString() {
@@ -115,6 +178,14 @@ public class SweGameState implements Cloneable{
 
     public static void main(String[] args) {
         SweGameState state = new SweGameState();
+        System.out.println(state);
+        if (state.isGoal()){
+            System.out.println("Player won!");
+        }
+        if (state.canMoveTo(0,0,3,1)){
+            System.out.println("true");
+        }
+        state.move(0,0,1,0);
         System.out.println(state);
     }
 
