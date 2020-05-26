@@ -114,16 +114,12 @@ public class GameController {
             System.out.println(fromRow +" " + fromCol + " " + player);
             isFirst=false;
             if (player == 0){
-                player = gameState.getBoard()[fromRow][fromCol].getValue();
+                if (gameState.getBoard()[fromRow][fromCol].getValue() != 0){
+                    player = gameState.getBoard()[fromRow][fromCol].getValue() == 1 ? 1 : 2;
+                }
+
                 System.out.println(player);
             }
-            else if (player == 1){
-                player = 2;
-            }
-            else{
-                player = 1;
-            }
-
         }
         else{
             int toRow = GridPane.getRowIndex((Node) mouseEvent.getSource());
@@ -133,6 +129,7 @@ public class GameController {
             if (! gameState.isGoal() && gameState.canMoveTo(fromRow,fromCol,toRow,toCol,player)) {
                 gameState.move(fromRow,fromCol,toRow,toCol,player);
                 System.out.println("move");
+
                 if (gameState.isGoal()) {
                     gameOver.setValue(true);
                     //log.info("Player {} has solved the game in {} steps", playerName, steps.get());
@@ -144,6 +141,12 @@ public class GameController {
                     }
 
                     //giveUpButton.setText("Finish");
+                }
+                if (player == 1){
+                    player = 2;
+                }
+                else{
+                    player = 1;
                 }
             }
             displayGameState();

@@ -193,5 +193,4 @@ public class SweGameState implements Cloneable{
         System.out.println(state);
     }
 
-
 }
