@@ -51,6 +51,10 @@ public class GameController {
     private int fromCol;
     private int player=0;
     private boolean isFirst=true;
+    private Instant startTime;
+    private IntegerProperty steps = new SimpleIntegerProperty();
+    private String winner;
+
 
 
     @FXML
@@ -58,6 +62,14 @@ public class GameController {
 
     @FXML
     private GridPane gameGrid;
+
+    @FXML
+    private Label stepsLabel;
+
+    @FXML
+    private Label stopWatchLabel;
+
+    private Timeline stopWatchTimeline;
 
 
     @FXML
@@ -77,11 +89,13 @@ public class GameController {
                 new Image(getClass().getResource("/images/cell1.png").toExternalForm()),
                 new Image(getClass().getResource("/images/cell2.png").toExternalForm())
         );
+        //stepsLabel.textProperty().bind(steps.asString());
         gameOver.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 //log.info("Game is over");
                 //log.debug("Saving result to database...");
-                //gameResultDao.persist(createGameResult());
+                gameResultDao.persist(createGameResult());
+                stopWatchTimeline.stop();
                 }
         });
         resetGame();
@@ -90,6 +104,10 @@ public class GameController {
 
     private void resetGame() {
         gameState = new SweGameState(SweGameState.INITIAL);
+        steps.set(0);
+        startTime = Instant.now();
+        gameOver.setValue(false);
+
         displayGameState();
     }
 
@@ -112,6 +130,7 @@ public class GameController {
             fromRow = GridPane.getRowIndex((Node) mouseEvent.getSource());
             fromCol = GridPane.getColumnIndex((Node) mouseEvent.getSource());
             System.out.println(fromRow +" " + fromCol + " " + player);
+            if(gameState.getBoard()[fromRow][fromCol].getValue() != 0)
             isFirst=false;
             if (player == 0){
                 if (gameState.getBoard()[fromRow][fromCol].getValue() != 0){
@@ -128,10 +147,12 @@ public class GameController {
 
             if (! gameState.isGoal() && gameState.canMoveTo(fromRow,fromCol,toRow,toCol,player)) {
                 gameState.move(fromRow,fromCol,toRow,toCol,player);
+                steps.set(steps.get() + 1);
                 System.out.println("move");
 
                 if (gameState.isGoal()) {
                     gameOver.setValue(true);
+                    winner = player == 1 ? redPlayerName : bluePlayerName;
                     //log.info("Player {} has solved the game in {} steps", playerName, steps.get());
                     if (player == 1){
                         messageLabel.setText(redPlayerName + " is the WINNER!");
@@ -194,33 +215,43 @@ public class GameController {
 
  */
 
-/*
+
     public void handleGiveUpButton(ActionEvent actionEvent) throws IOException {
         String buttonText = ((Button) actionEvent.getSource()).getText();
-        log.debug("{} is pressed", buttonText);
+        //log.debug("{} is pressed", buttonText);
         if (buttonText.equals("Give Up")) {
-            log.info("The game has been given up");
+            //log.info("The game has been given up");
         }
         gameOver.setValue(true);
-        log.info("Loading high scores scene...");
+        //log.info("Loading high scores scene...");
         fxmlLoader.setLocation(getClass().getResource("/fxml/highscores.fxml"));
         Parent root = fxmlLoader.load();
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.show();
     }
-*/
-/*
+
+
     private GameResult createGameResult() {
         GameResult result = GameResult.builder()
-                .player(playerName)
-                .solved(gameState.isSolved())
+                .redplayer(redPlayerName)
+                .blueplayer(bluePlayerName)
+                .winner(winner)
                 .duration(Duration.between(startTime, Instant.now()))
                 .steps(steps.get())
                 .build();
         return result;
     }
-*/
 
+    /*
+    public void handleRestartButton(ActionEvent actionEvent) throws IOException {
+        //log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+        //log.info("Loading launch scene...");
+        fxmlLoader.setLocation(getClass().getResource("/fxml/launch.fxml"));
+        Parent root = fxmlLoader.load();
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }*/
 }
 

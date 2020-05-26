@@ -15,14 +15,14 @@ public class GameResultDao extends GenericJpaDao<GameResult> {
     }
 
     /**
-     * Returns the list of {@code n} players with the most wins.
+     * Returns the list of the last {@code n} games.
      *
      * @param n the maximum number of results to be returned
-     * @return the list of {@code n} players with the most wins.
+     * @return the list of the last {@code n} games.
      */
     @Transactional
-    public List<GameResult> findBest(int n) {
-        return entityManager.createQuery("SELECT r FROM GameResult r where r.win=TRUE group by r.player order by count(r.win)", GameResult.class)
+    public List<GameResult> findLast(int n) {
+        return entityManager.createQuery("SELECT r FROM GameResult r ORDER BY r.duration ASC, r.created DESC", GameResult.class)
                 .setMaxResults(n)
                 .getResultList();
     }
