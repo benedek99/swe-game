@@ -14,10 +14,10 @@
             </font>
         </Label>
         <Label layoutX="122.0" layoutY="200.0" text="Red player's name:" />
-        <TextField fx:id="playerNameTextField" layoutX="275.0" layoutY="195.0" prefHeight="26.0" prefWidth="158.0" />
+        <TextField fx:id="RedPlayerNameTextField" layoutX="275.0" layoutY="195.0" prefHeight="26.0" prefWidth="158.0" />
         <Button fx:id="startButton" layoutX="249.0" layoutY="287.0" mnemonicParsing="false" onAction="#startAction" prefHeight="51.0" prefWidth="105.0" text="Start game" />
-        <Label fx:id="errorLabel" layoutX="223.0" layoutY="200.0" prefHeight="16.0" prefWidth="151.0" textFill="#e30e0e" />
-      <Label layoutX="122.0" layoutY="241.0" text="Blue player's name:" />
-      <TextField fx:id="playerNameTextField1" layoutX="275.0" layoutY="236.0" prefHeight="26.0" prefWidth="158.0" />
+        <Label fx:id="errorLabel" layoutX="209.0" layoutY="355.0" prefHeight="16.0" prefWidth="151.0" textFill="#e30e0e" />
+        <Label layoutX="122.0" layoutY="241.0" text="Blue player's name:" />
+        <TextField fx:id="BluePlayerNameTextField" layoutX="275.0" layoutY="236.0" prefHeight="26.0" prefWidth="158.0" />
     </children>
 </Pane>

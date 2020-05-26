@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import swegame.results.GameResultDao;
 import util.guice.PersistenceModule;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +22,7 @@ public class SweGameApplication extends Application {
                 @Override
                 protected void configure() {
                     install(new PersistenceModule("swe-game"));
-                    //bind(GameResultDao.class);
+                    bind(GameResultDao.class);
                 }
             }
     ));

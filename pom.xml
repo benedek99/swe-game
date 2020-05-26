@@ -9,8 +9,8 @@
     <version>1.0</version>
     <description>Two player board game</description>
     <scm>
-        <connection>https://github.com/benedek99/swe-game.git</connection>
-        <developerConnection>https://github.com/benedek99/swe-game.git</developerConnection>
+        <connection>scm:git:https://github.com/benedek99/swe-game.git</connection>
+        <developerConnection>scm:git:https://github.com/benedek99/swe-game.git</developerConnection>
     </scm>
     <developers>
         <developer>
