@@ -3,7 +3,6 @@ package swegame.javafx.controller;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -89,13 +88,14 @@ public class GameController {
                 new Image(getClass().getResource("/images/cell1.png").toExternalForm()),
                 new Image(getClass().getResource("/images/cell2.png").toExternalForm())
         );
-        //stepsLabel.textProperty().bind(steps.asString());
+        stepsLabel.textProperty().bind(steps.asString());
         gameOver.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                //log.info("Game is over");
-                //log.debug("Saving result to database...");
+                log.info("Game is over");
+                log.debug("Saving result to database...");
                 gameResultDao.persist(createGameResult());
                 stopWatchTimeline.stop();
+                messageLabel.setText(winner + " is the WINNER!");
                 }
         });
         resetGame();
@@ -107,8 +107,9 @@ public class GameController {
         steps.set(0);
         startTime = Instant.now();
         gameOver.setValue(false);
-
+        createStopWatch();
         displayGameState();
+        messageLabel.setText("");
     }
 
     private void displayGameState() {
@@ -116,142 +117,92 @@ public class GameController {
             for (int j = 0; j < 4; j++) {
                 ImageView view = (ImageView) gameGrid.getChildren().get(i * 4 + j);
                 if (view.getImage() != null) {
-                    //log.trace("Image({}, {}) = {}", i, j, view.getImage().getUrl());
+                    log.trace("Image({}, {}) = {}", i, j, view.getImage().getUrl());
                 }
                 view.setImage(cellImages.get(gameState.getBoard()[i][j].getValue()));
             }
         }
-        System.out.println("move");
-        System.out.println(gameState);
+        //System.out.println(gameState);
     }
 
     public  void handleClickOnDisk(MouseEvent mouseEvent){
         if (isFirst){
             fromRow = GridPane.getRowIndex((Node) mouseEvent.getSource());
             fromCol = GridPane.getColumnIndex((Node) mouseEvent.getSource());
-            System.out.println(fromRow +" " + fromCol + " " + player);
+            log.debug("Cell ({}, {}) is pressed", fromRow, fromCol);
             if(gameState.getBoard()[fromRow][fromCol].getValue() != 0)
             isFirst=false;
             if (player == 0){
                 if (gameState.getBoard()[fromRow][fromCol].getValue() != 0){
                     player = gameState.getBoard()[fromRow][fromCol].getValue() == 1 ? 1 : 2;
                 }
-
-                System.out.println(player);
             }
         }
         else{
             int toRow = GridPane.getRowIndex((Node) mouseEvent.getSource());
             int toCol = GridPane.getColumnIndex((Node) mouseEvent.getSource());
-            //log.debug("Cube ({}, {}) is pressed", row, col);
+            log.debug("Cell at ({}, {}) is pressed", toRow, toCol);
 
             if (! gameState.isGoal() && gameState.canMoveTo(fromRow,fromCol,toRow,toCol,player)) {
                 gameState.move(fromRow,fromCol,toRow,toCol,player);
                 steps.set(steps.get() + 1);
-                System.out.println("move");
 
                 if (gameState.isGoal()) {
-                    gameOver.setValue(true);
                     winner = player == 1 ? redPlayerName : bluePlayerName;
-                    //log.info("Player {} has solved the game in {} steps", playerName, steps.get());
-                    if (player == 1){
-                        messageLabel.setText(redPlayerName + " is the WINNER!");
-                    }
-                    else{
-                        messageLabel.setText(bluePlayerName + " is the WINNER!");
-                    }
-
-                    //giveUpButton.setText("Finish");
+                    log.info("Player {} has won the game", winner);
+                    giveUpButton.setText("Finish");
+                    gameOver.setValue(true);
                 }
-                if (player == 1){
-                    player = 2;
-                }
-                else{
-                    player = 1;
-                }
+                player = player == 1 ? 2 : 1;
             }
             displayGameState();
-            System.out.println(toRow +" " + toCol + " " + player);
             isFirst=true;
         }
 
 
     }
-/*
-    public void handleReleaseOnCell(MouseEvent mouseEvent) {
-        int toRow = GridPane.getRowIndex((Node) mouseEvent.getSource());
-        int toCol = GridPane.getColumnIndex((Node) mouseEvent.getSource());
-        //log.debug("Cube ({}, {}) is pressed", row, col);
-        if (player == 0){
-            player = gameState.getBoard()[fromRow][fromCol].getValue();
-            System.out.println(player);
-        }
-        else if (player == 1){
-            player = 2;
-        }
-        else{
-            player = 1;
-        }
 
-        if (! gameState.isGoal() && gameState.canMoveTo(fromRow,fromCol,toRow,toCol,player)) {
-            gameState.move(fromRow,fromCol,toRow,toCol,player);
-            System.out.println("move");
-            if (gameState.isGoal()) {
-                gameOver.setValue(true);
-                //log.info("Player {} has solved the game in {} steps", playerName, steps.get());
-                if (player == 1){
-                    messageLabel.setText(redPlayerName + " is the WINNER!");
-                }
-                else{
-                    messageLabel.setText(bluePlayerName + " is the WINNER!");
-                }
-
-                //giveUpButton.setText("Finish");
-            }
-        }
-        displayGameState();
-        System.out.println(toRow +" " + toCol + " " + player);
-    }
-
- */
 
 
     public void handleGiveUpButton(ActionEvent actionEvent) throws IOException {
         String buttonText = ((Button) actionEvent.getSource()).getText();
-        //log.debug("{} is pressed", buttonText);
+        log.debug("{} is pressed", buttonText);
         if (buttonText.equals("Give Up")) {
-            //log.info("The game has been given up");
+            log.info("The game has been given up");
+            winner = player == 2 ? redPlayerName : bluePlayerName;
+            giveUpButton.setText("Finish");
+            gameOver.setValue(true);
         }
-        gameOver.setValue(true);
-        //log.info("Loading high scores scene...");
-        fxmlLoader.setLocation(getClass().getResource("/fxml/highscores.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }
+        else {
 
+            log.info("Loading previous results scene...");
+            fxmlLoader.setLocation(getClass().getResource("/fxml/highscores.fxml"));
+            Parent root = fxmlLoader.load();
+            System.out.println(winner);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        }
+    }
 
     private GameResult createGameResult() {
         GameResult result = GameResult.builder()
                 .redplayer(redPlayerName)
                 .blueplayer(bluePlayerName)
                 .winner(winner)
-                .duration(Duration.between(startTime, Instant.now()))
                 .steps(steps.get())
+                .duration(Duration.between(startTime, Instant.now()))
                 .build();
         return result;
     }
 
-    /*
-    public void handleRestartButton(ActionEvent actionEvent) throws IOException {
-        //log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
-        //log.info("Loading launch scene...");
-        fxmlLoader.setLocation(getClass().getResource("/fxml/launch.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-    }*/
+    private void createStopWatch() {
+        stopWatchTimeline = new Timeline(new KeyFrame(javafx.util.Duration.ZERO, e -> {
+            long millisElapsed = startTime.until(Instant.now(), ChronoUnit.MILLIS);
+            stopWatchLabel.setText(DurationFormatUtils.formatDuration(millisElapsed, "HH:mm:ss"));
+        }), new KeyFrame(javafx.util.Duration.seconds(1)));
+        stopWatchTimeline.setCycleCount(Animation.INDEFINITE);
+        stopWatchTimeline.play();
+    }
 }
 

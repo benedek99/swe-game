@@ -6,18 +6,18 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swegame.javafx.controller.LaunchController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="690.0" prefWidth="580.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swegame.javafx.controller.LaunchController">
     <children>
-        <Label layoutX="203.0" layoutY="70.0" text="SWE GAME" textFill="#002366">
+        <Label layoutX="191.0" layoutY="169.0" text="SWE GAME" textFill="#002366">
             <font>
                 <Font name="MathJax_Main-Bold" size="36.0" />
             </font>
         </Label>
-        <Label layoutX="122.0" layoutY="200.0" text="Red player's name:" />
-        <TextField fx:id="RedPlayerNameTextField" layoutX="275.0" layoutY="195.0" prefHeight="26.0" prefWidth="158.0" />
-        <Button fx:id="startButton" layoutX="249.0" layoutY="287.0" mnemonicParsing="false" onAction="#startAction" prefHeight="51.0" prefWidth="105.0" text="Start game" />
+        <Label layoutX="128.0" layoutY="287.0" text="Red player's name:" />
+        <TextField fx:id="RedPlayerNameTextField" layoutX="275.0" layoutY="282.0" prefHeight="26.0" prefWidth="158.0" />
+        <Button fx:id="startButton" layoutX="238.0" layoutY="452.0" mnemonicParsing="false" onAction="#startAction" prefHeight="51.0" prefWidth="105.0" text="Start game" />
         <Label fx:id="errorLabel" layoutX="209.0" layoutY="355.0" prefHeight="16.0" prefWidth="151.0" textFill="#e30e0e" />
-        <Label layoutX="122.0" layoutY="241.0" text="Blue player's name:" />
-        <TextField fx:id="BluePlayerNameTextField" layoutX="275.0" layoutY="236.0" prefHeight="26.0" prefWidth="158.0" />
+        <Label layoutX="126.0" layoutY="363.0" text="Blue player's name:" />
+        <TextField fx:id="BluePlayerNameTextField" layoutX="275.0" layoutY="358.0" prefHeight="26.0" prefWidth="158.0" />
     </children>
 </Pane>

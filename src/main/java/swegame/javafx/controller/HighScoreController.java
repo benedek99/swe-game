@@ -8,10 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +37,13 @@ public class HighScoreController {
     private TableView<GameResult> highScoreTable;
 
     @FXML
-    private TableColumn<GameResult, String> player;
+    private TableColumn<GameResult, String> redplayer;
+
+    @FXML
+    private TableColumn<GameResult, String> blueplayer;
+
+    @FXML
+    private TableColumn<GameResult, String> winner;
 
     @FXML
     private TableColumn<GameResult, Integer> steps;
@@ -53,13 +56,19 @@ public class HighScoreController {
 
     @FXML
     private void initialize() {
-        //log.debug("Loading high scores...");
+        log.debug("Loading previous results...");
         List<GameResult> highScoreList = gameResultDao.findLast(10);
 
-        player.setCellValueFactory(new PropertyValueFactory<>("player"));
+
+
+        redplayer.setCellValueFactory(new PropertyValueFactory<>("redplayer"));
+        blueplayer.setCellValueFactory(new PropertyValueFactory<>("blueplayer"));
+        winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
         steps.setCellValueFactory(new PropertyValueFactory<>("steps"));
         duration.setCellValueFactory(new PropertyValueFactory<>("duration"));
         created.setCellValueFactory(new PropertyValueFactory<>("created"));
+
+
 
         duration.setCellFactory(column -> {
             TableCell<GameResult, Duration> cell = new TableCell<GameResult, Duration>() {
@@ -99,8 +108,8 @@ public class HighScoreController {
     }
 
     public void handleRestartButton(ActionEvent actionEvent) throws IOException {
-        //log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
-        //log.info("Loading launch scene...");
+        log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+        log.info("Loading launch scene...");
         fxmlLoader.setLocation(getClass().getResource("/fxml/launch.fxml"));
         Parent root = fxmlLoader.load();
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();

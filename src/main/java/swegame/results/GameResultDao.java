@@ -22,7 +22,7 @@ public class GameResultDao extends GenericJpaDao<GameResult> {
      */
     @Transactional
     public List<GameResult> findLast(int n) {
-        return entityManager.createQuery("SELECT r FROM GameResult r ORDER BY r.duration ASC, r.created DESC", GameResult.class)
+        return entityManager.createQuery("SELECT r FROM GameResult r ORDER BY  r.created DESC", GameResult.class)
                 .setMaxResults(n)
                 .getResultList();
     }

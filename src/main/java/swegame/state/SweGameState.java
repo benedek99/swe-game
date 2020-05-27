@@ -157,14 +157,12 @@ public class SweGameState implements Cloneable{
      */
     public void move(int fromRow, int fromCol, int toRow, int toCol, int player){
         if (canMoveTo(fromRow,fromCol,toRow,toCol, player)){
-            //log.info("disk at ({},{}) is rolled to ({},{})", fromRow, fromCol, toRow, toCol);
+            log.info("disk at ({},{}) is moved to ({},{})", fromRow, fromCol, toRow, toCol);
             board[toRow][toCol] = Cell.of(board[fromRow][fromCol].getValue());
             board[fromRow][fromCol] = Cell.of(0);
-            System.out.println("Can move");
         }
-        else {System.out.println("Cannot move");
+        else {
             throw new IllegalArgumentException();
-
         }
 
     }
