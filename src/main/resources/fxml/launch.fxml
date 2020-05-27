@@ -15,8 +15,8 @@
         </Label>
         <Label layoutX="128.0" layoutY="287.0" text="Red player's name:" />
         <TextField fx:id="RedPlayerNameTextField" layoutX="275.0" layoutY="282.0" prefHeight="26.0" prefWidth="158.0" />
-        <Button fx:id="startButton" layoutX="238.0" layoutY="452.0" mnemonicParsing="false" onAction="#startAction" prefHeight="51.0" prefWidth="105.0" text="Start game" />
-        <Label fx:id="errorLabel" layoutX="209.0" layoutY="355.0" prefHeight="16.0" prefWidth="151.0" textFill="#e30e0e" />
+        <Button fx:id="startButton" layoutX="215.0" layoutY="456.0" mnemonicParsing="false" onAction="#startAction" prefHeight="51.0" prefWidth="105.0" text="Start game" />
+        <Label fx:id="errorLabel" contentDisplay="CENTER" layoutX="215.0" layoutY="421.0" prefHeight="16.0" prefWidth="151.0" textFill="#e30e0e" />
         <Label layoutX="126.0" layoutY="363.0" text="Blue player's name:" />
         <TextField fx:id="BluePlayerNameTextField" layoutX="275.0" layoutY="358.0" prefHeight="26.0" prefWidth="158.0" />
     </children>
