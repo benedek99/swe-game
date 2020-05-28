@@ -54,6 +54,13 @@ public class HighScoreController {
     @FXML
     private TableColumn<GameResult, ZonedDateTime> created;
 
+    private String redPlayerName;
+    private String bluePlayerName;
+
+    public void setPlayerNames(String redPlayerName, String bluePlayerName) {
+        this.redPlayerName = redPlayerName;
+        this.bluePlayerName = bluePlayerName;
+    }
     @FXML
     private void initialize() {
         log.debug("Loading previous results...");
@@ -112,6 +119,17 @@ public class HighScoreController {
         log.info("Loading launch scene...");
         fxmlLoader.setLocation(getClass().getResource("/fxml/launch.fxml"));
         Parent root = fxmlLoader.load();
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+    public void handleRematchButton(ActionEvent actionEvent) throws IOException {
+        log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+        log.info("Loading game scene...");
+        fxmlLoader.setLocation(getClass().getResource("/fxml/game.fxml"));
+        Parent root = fxmlLoader.load();
+        fxmlLoader.<GameController>getController().setPlayerNames(redPlayerName,bluePlayerName);
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.show();

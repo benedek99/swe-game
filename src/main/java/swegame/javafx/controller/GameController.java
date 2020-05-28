@@ -143,7 +143,7 @@ public class GameController {
             int toCol = GridPane.getColumnIndex((Node) mouseEvent.getSource());
             log.debug("Cell at ({}, {}) is pressed", toRow, toCol);
 
-            if (! gameState.isGoal() && gameState.canMoveTo(fromRow,fromCol,toRow,toCol,player)) {
+            if (! gameState.isGoal() && gameState.canMoveTo(fromRow,fromCol,toRow,toCol,player) && ! gameOver.getValue()) {
                 gameState.move(fromRow,fromCol,toRow,toCol,player);
                 steps.set(steps.get() + 1);
 
@@ -178,7 +178,7 @@ public class GameController {
             log.info("Loading previous results scene...");
             fxmlLoader.setLocation(getClass().getResource("/fxml/highscores.fxml"));
             Parent root = fxmlLoader.load();
-            System.out.println(winner);
+            fxmlLoader.<HighScoreController>getController().setPlayerNames(redPlayerName,bluePlayerName);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

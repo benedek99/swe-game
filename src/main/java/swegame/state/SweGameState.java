@@ -167,6 +167,9 @@ public class SweGameState implements Cloneable{
 
     }
 
+    /**
+     * returns the string representation of the board.
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Cell[] row : board) {

@@ -4,9 +4,17 @@ package swegame.state;
  */
 
 public enum Cell {
-
+    /**
+     * Represents the empty cell.
+     */
     EMPTY,
+    /**
+     * Represents a red cell.
+     */
     RED,
+    /**
+     * Represents a blue cell.
+     */
     BLUE;
 
     /**
@@ -33,6 +41,9 @@ public enum Cell {
         return ordinal();
     }
 
+    /**
+     * Returns the string representation of the cell.
+     */
     public String toString() {
         return Integer.toString(ordinal());
     }
