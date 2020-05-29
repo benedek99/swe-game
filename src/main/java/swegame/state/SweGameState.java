@@ -29,6 +29,8 @@ public class SweGameState implements Cloneable{
     @Setter(AccessLevel.NONE)
     private Cell[][] board;
 
+    private int player = 1;
+
     /**
      * Creates a {@code SweGameState} object representing the (original)
      * initial state of the game.
@@ -129,12 +131,11 @@ public class SweGameState implements Cloneable{
      * @param fromCol the column of the disk to be moved
      * @param toRow the row we move the disk to
      * @param toCol the column we move the disk to
-     * @param player the number of the player moving
      * @return {@code true} if the disk at the specified position can be moved
      * to an other specified position, {@code false} otherwise
      */
 
-    public boolean canMoveTo(int fromRow, int fromCol, int toRow, int toCol, int player){
+    public boolean canMoveTo(int fromRow, int fromCol, int toRow, int toCol){
         if (fromRow<0 || fromRow>4 || toRow<0 || toRow>4 || fromCol<0 || fromCol>3 || toCol<0 || toCol>3){
             return false;
         }
@@ -151,15 +152,15 @@ public class SweGameState implements Cloneable{
      * @param fromCol the column of the disk to be moved
      * @param toRow the row we move the disk to
      * @param toCol the column we move the disk to
-     * @param player the number of the player moving
      * @throws IllegalArgumentException if the disk at the specified position
      * can not be moved to the other specified position
      */
-    public void move(int fromRow, int fromCol, int toRow, int toCol, int player){
-        if (canMoveTo(fromRow,fromCol,toRow,toCol, player)){
+    public void move(int fromRow, int fromCol, int toRow, int toCol){
+        if (canMoveTo(fromRow,fromCol,toRow,toCol)){
             log.info("disk at ({},{}) is moved to ({},{})", fromRow, fromCol, toRow, toCol);
             board[toRow][toCol] = Cell.of(board[fromRow][fromCol].getValue());
             board[fromRow][fromCol] = Cell.of(0);
+            player = 3 - player;
         }
         else {
             throw new IllegalArgumentException();
@@ -187,10 +188,10 @@ public class SweGameState implements Cloneable{
         if (state.isGoal()){
             System.out.println("Player won!");
         }
-        if (state.canMoveTo(0,0,3,1,1)){
+        if (state.canMoveTo(0,0,3,1)){
             System.out.println("true");
         }
-        state.move(0,0,1,0, 2);
+        state.move(0,0,1,0);
         System.out.println(state);
     }
 

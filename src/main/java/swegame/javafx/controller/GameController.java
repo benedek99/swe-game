@@ -48,7 +48,6 @@ public class GameController {
     private List<Image> cellImages;
     private int fromRow;
     private int fromCol;
-    private int player=0;
     private boolean isFirst=true;
     private Instant startTime;
     private IntegerProperty steps = new SimpleIntegerProperty();
@@ -58,6 +57,12 @@ public class GameController {
 
     @FXML
     private Label messageLabel;
+
+    @FXML
+    private Label redLabel;
+
+    @FXML
+    private Label blueLabel;
 
     @FXML
     private GridPane gameGrid;
@@ -89,6 +94,8 @@ public class GameController {
                 new Image(getClass().getResource("/images/cell2.png").toExternalForm())
         );
         stepsLabel.textProperty().bind(steps.asString());
+        redLabel.setText("Red player starts");
+        blueLabel.setText("");
         gameOver.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 log.info("Game is over");
@@ -96,6 +103,8 @@ public class GameController {
                 gameResultDao.persist(createGameResult());
                 stopWatchTimeline.stop();
                 messageLabel.setText(winner + " is the WINNER!");
+                redLabel.setText("");
+                blueLabel.setText("");
                 }
         });
         resetGame();
@@ -122,7 +131,6 @@ public class GameController {
                 view.setImage(cellImages.get(gameState.getBoard()[i][j].getValue()));
             }
         }
-        //System.out.println(gameState);
     }
 
     public  void handleClickOnDisk(MouseEvent mouseEvent){
@@ -132,28 +140,30 @@ public class GameController {
             log.debug("Cell ({}, {}) is pressed", fromRow, fromCol);
             if(gameState.getBoard()[fromRow][fromCol].getValue() != 0)
             isFirst=false;
-            if (player == 0){
-                if (gameState.getBoard()[fromRow][fromCol].getValue() != 0){
-                    player = gameState.getBoard()[fromRow][fromCol].getValue() == 1 ? 1 : 2;
-                }
-            }
         }
         else{
             int toRow = GridPane.getRowIndex((Node) mouseEvent.getSource());
             int toCol = GridPane.getColumnIndex((Node) mouseEvent.getSource());
             log.debug("Cell at ({}, {}) is pressed", toRow, toCol);
 
-            if (! gameState.isGoal() && gameState.canMoveTo(fromRow,fromCol,toRow,toCol,player) && ! gameOver.getValue()) {
-                gameState.move(fromRow,fromCol,toRow,toCol,player);
+            if (! gameState.isGoal() && gameState.canMoveTo(fromRow,fromCol,toRow,toCol) && ! gameOver.getValue()) {
+                gameState.move(fromRow,fromCol,toRow,toCol);
                 steps.set(steps.get() + 1);
+                if (gameState.getPlayer()==1){
+                    redLabel.setText(redPlayerName + " is moving");
+                    blueLabel.setText("");
+                }
+                else{
+                    blueLabel.setText((bluePlayerName + " is moving"));
+                    redLabel.setText("");
+                }
 
                 if (gameState.isGoal()) {
-                    winner = player == 1 ? redPlayerName : bluePlayerName;
+                    winner = gameState.getPlayer() == 2 ? redPlayerName : bluePlayerName;
                     log.info("Player {} has won the game", winner);
                     giveUpButton.setText("Finish");
                     gameOver.setValue(true);
                 }
-                player = player == 1 ? 2 : 1;
             }
             displayGameState();
             isFirst=true;
@@ -169,7 +179,7 @@ public class GameController {
         log.debug("{} is pressed", buttonText);
         if (buttonText.equals("Give Up")) {
             log.info("The game has been given up");
-            winner = player == 2 ? redPlayerName : bluePlayerName;
+            winner = gameState.getPlayer() == 2 ? redPlayerName : bluePlayerName;
             giveUpButton.setText("Finish");
             gameOver.setValue(true);
         }

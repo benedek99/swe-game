@@ -96,21 +96,21 @@ public class SweGameStateTest {
     @Test
     void testCanMoveTo(){
         SweGameState state = new SweGameState();
-        assertFalse(state.canMoveTo(-1,0,3 ,5,1));
-        assertFalse(state.canMoveTo(6,0,3 ,5,1));
-        assertFalse(state.canMoveTo(0,0,5 ,5,1));
-        assertFalse(state.canMoveTo(0,0,-4 ,5,1));
-        assertFalse(state.canMoveTo(0,0,1 ,0,1));
-        assertFalse(state.canMoveTo(0,0,0 ,1,2));
-        assertFalse(state.canMoveTo(0,0,0 ,0,2));
-        assertTrue(state.canMoveTo(0,0,1,0,2));
-        assertTrue(state.canMoveTo(4,0,3,0,1));
+        assertFalse(state.canMoveTo(-1,0,3 ,5));
+        assertFalse(state.canMoveTo(6,0,3 ,5));
+        assertFalse(state.canMoveTo(0,0,5 ,5));
+        assertFalse(state.canMoveTo(0,0,-4 ,5));
+        assertFalse(state.canMoveTo(0,0,1 ,0));
+        assertFalse(state.canMoveTo(0,0,0 ,1));
+        assertFalse(state.canMoveTo(0,0,0 ,0));
+        assertTrue(state.canMoveTo(0,0,1,0));
+        assertTrue(state.canMoveTo(4,0,3,0));
     }
 
     @Test
     void testMove(){
         SweGameState state = new SweGameState();
-        state.move(0,0,1,0,2);
+        state.move(0,0,1,0);
         assertArrayEquals(new Cell[][] {
                 {Cell.EMPTY,Cell.RED,Cell.BLUE,Cell.RED},
                 {Cell.BLUE,Cell.EMPTY,Cell.EMPTY,Cell.EMPTY},
@@ -118,7 +118,7 @@ public class SweGameStateTest {
                 {Cell.EMPTY,Cell.EMPTY,Cell.EMPTY,Cell.EMPTY},
                 {Cell.RED,Cell.BLUE,Cell.RED,Cell.BLUE}
         }, state.getBoard());
-        state.move(4,0,3,0,1);
+        state.move(4,0,3,0);
         assertArrayEquals(new Cell[][] {
                 {Cell.EMPTY,Cell.RED,Cell.BLUE,Cell.RED},
                 {Cell.BLUE,Cell.EMPTY,Cell.EMPTY,Cell.EMPTY},
